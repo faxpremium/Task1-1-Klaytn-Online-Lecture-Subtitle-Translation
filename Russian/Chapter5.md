@@ -316,37 +316,37 @@ const config = {
 }
  
  
-There’s a rpcURL in config. 
-We have defined which Klaytn node to connect to and use. 
-I said it is baobab testnet. 
-Finally, we will create a constant that instantiates the rpcURL by passing it to the Caver constructor.
+В конфиге есть rpcURL.
+Мы определили, к какому узлу Klaytn подключаться и использовать.
+Я сказал, что это baobab тестнет.
+Наконец, мы создадим константу, которая создает экземпляр rpcURL, передавая его конструктору Caver.
 const cav = new Caver(config.rpcURL);
  
  
-The work of instantiation is over and this cav constant is now available in the app.
- Now you have to start the function, but before that, in the start function, you have to first check whether the account has been verified through the session. 
-However, I will leave this part to later because s we will use session in the later lecture, so just leave start function blank for now. 
-Let’s implement the handleImport function first.
- We should be able to click on the login button and select the keystore file after modal pops up. 
-However, this file must be validated whether it is actually a valid keystore file, or not. 
-Let's do that in the handleimport function. 
-First, we create a FileReader object and place it into a constant.
+Работа над созданием завершена, и эта константа теперь доступна в приложении.
+  Теперь вам нужно запустить функцию, но перед этим, в функции запуска, вы должны сначала убедиться, была ли учетная запись проверена в течение сеанса.
+Тем не менее, я оставлю эту часть напопозже, потому что мы будем использовать сессию в более поздней лекции, так что пока оставьте функцию запуска пустой.
+Давайте сначала реализуем функцию handleImport.
+  Мы должны быть в состоянии нажать на кнопку входа и выбрать файл хранилища ключей после того, как появится модальное окно.
+Однако этот файл должен быть проверен, является ли он действительным файлом хранилища ключей или нет.
+Давайте сделаем это в функции handleimport.
+Сначала мы создаем объект FileReader и помещаем его в константу.
 const fileReader = new FileReader();
  
  
-And use readAsText function to read the selected file.
+Используйте функцию readAsText, чтобы прочитать выбранный файл.
 fileReader.readAsText(event.target.files[0]);
  
  
-event.target.files, this part means the file we selected. 
-When readAsText execution is completed, the FileReader's onload event occurs.
+event.target.files, эта часть показывает файл, который мы выбрали.
+Когда выполнение readAsText завершено, происходит событие onload FileReader.
 fileReader.onload = (event) => {  	
   
 }
  
-The event received by the callback, in other words, the contents of the file, can now be used within this block of code. 
-The contents of this file will be checked whether it is a valid keystore file. 
-First, add a try catch block inside.
+Событие, полученное обратным вызовом, другими словами, содержимое файла, теперь можно использовать в этом блоке кода.
+Содержимое этого файла будет проверено, является ли он действительным файлом хранилища ключей.
+Сначала добавьте блок try catch.
  
   try {
    	
@@ -355,44 +355,44 @@ First, add a try catch block inside.
   }
  
  
-Now we’ll check through if-sentence if the contents of the file are valid or not, in other words,  if this is an actual keystore file.
+Теперь мы проверим if-предложение, является ли содержимое файла допустимым или нет, другими словами, является ли это фактическим файлом хранилища ключей.
 if (!this.checkValidKeystore(event.target.result)) {
  
 }
  
  
-I passed the contents of the file we read to the function checkValidKeystore as an argument.
- Now let's decorate the checkValidKeystore function. 
-This function takes the keystore as an argument and receives the file. 
-And the keystore file I received is a json file. 
-I will change it to Javascript object to use the properties in this json file as variables.
+Я передал содержимое файла, который мы читаем, функции checkValidKeystore в качестве аргумента.
+  Теперь давайте украсим функцию checkValidKeystore.
+Эта функция принимает хранилище ключей в качестве аргумента и получает файл.
+И файл хранилища ключей, который я получил, является файлом json.
+Я изменю его на объект Javascript, чтобы использовать свойства этого файла json в качестве переменных.
 	const parsedKeystore = JSON.parse(keystore);
  
  
-I used the json parse function to analyze the contents of the keystore file, convert it to an object, and store it in a constant. 
-What should we do next? 
-Make sure that the properties required for your keystore configuration are well entered. 
-Let's look at the keystore file and see what we need. 
-The essential elements of keystore configuration are version, id, address, and crypto. 
-Without these four fields, a keystore file can’t be a keystore file. 
-So, I will check it through the code.
+Я использовал функцию синтаксического анализа json для анализа содержимого файла хранилища ключей, преобразования его в объект и сохранения его в константе.
+Что нам делать дальше?
+Убедитесь, что свойства, необходимые для вашей конфигурации хранилища ключей, введены правильно.
+Давайте посмотрим на файл хранилища ключей и посмотрим, что нам нужно.
+Основными элементами конфигурации хранилища ключей являются версия, идентификатор, адрес и криптография.
+Без этих четырех полей файл хранилища ключей не может быть файлом хранилища ключей.
+Итак, я проверю это через код.
 const isValidKeystore = parsedKeystore.version &&
   	parsedKeystore.id &&
   	parsedKeystore.address &&
   	parsedKeystore.crypto;
  
  
-Finally, return this constant.
+В финале, необходимо получить эту константу.
 return isValidKeystore;
  
  
-I went up again and verified if the file I just imported is a valid keystore file. 
-If not, through message, shows that it is not valid and ends the function.
+Я снова проверил, является ли файл, который я только что импортировал, действительным файлом хранилища ключей.
+Если нет, то сообщение показывает, что оно недействительно и завершает функцию.
 $('#message').text('유효하지 않은 keystore 파일입니다.');
 return;
  
-If it passed the verification, then we’ll save the contents of the keystore file to a global variable.
-First, we need to create a global variable. Create it on the start function
+Если он прошел проверку, мы сохраним содержимое файла хранилища ключей в глобальной переменной.
+Во-первых, нам нужно создать глобальную переменную. Создайте ее в функции запуска
  
 auth: {
 	accessType: 'keystore',
@@ -401,44 +401,44 @@ auth: {
   },
  
  
-There are three fields in the Auth object.
- The accessType is an verification method, which has a keystore type and a privatekey type. 
-We are proceeding with keystore type. 
-The Keystore field stores the entire contents of the keystore file.
- Lastly, password is the field containing the password that will be combined with the keystore file. 
-If we go back to the function and pass the validation,
+В объекте Auth есть три поля.
+  AccessType - это метод проверки, который имеет тип хранилища ключей и тип закрытого ключа.
+Мы продолжаем с типом хранилища ключей.
+Поле Keystore хранит все содержимое файла хранилища ключей.
+  Наконец, password - это поле, содержащее пароль, который будет объединен с файлом хранилища ключей.
+Если мы вернемся к функции и пройдем проверку,
 this.auth.keystore = event.target.result;
  
  
-send the entire contents of the loaded file to the keystore field of the auth variable we created. 
-After that, send a message saying that I was successful.
+отправьте все содержимое загруженного файла в поле хранилища ключей созданной нами переменной auth.
+После этого отправьте сообщение о том, что процесс успешен.
 $('#message').text('keystore 통과. 비밀번호를 입력하세요.');
  
-Make it possible to type password in the password field immediately.
+Разрешите сразу ввести пароль в поле пароля.
  
 document.querySelector('#input-password').focus();
  
-Finally, when reading the file, if there is an error, send an error message in the catch block and terminate the function.
+Наконец, при чтении файла, если есть ошибка, отправьте сообщение об ошибке в блоке catch и завершите функцию.
 $('#message').text('유효하지 않은 keystore 파일입니다.');
 return;
  
  
-Yes, so far Handleimport function has been implemented well. 
-Let's test it now. Select the keystore file. 
-The pass message will be displayed and the focus will be moved to the part where the password can be entered. 
-To test the opposite case, let’s choose any random file. 
-Ok, error message is generated. 
-It’s working well. 
-Now, let’s make a function that stores the password in a global variable when we enter the password. 
-It will be very simple. 
-If you go to html, the handlepassword function is called when you enter the password. 
-Then, at the handlepassword function,
+Да, пока функция Handleimport реализована хорошо.
+Давайте проверим ее сейчас. Выберите файл хранилища ключей.
+Будет отображено сообщение о пропуске, и фокус будет перемещен в ту часть, где можно ввести пароль.
+Чтобы проверить иной случай, давайте выберем любой случайный файл.
+Хорошо, сообщение об ошибке генерируется.
+Работает хорошо.
+Теперь давайте создадим функцию, которая сохраняет пароль в глобальной переменной, когда мы вводим пароль.
+Это будет очень просто.
+Если вы переходите на html, функция handlepassword вызывается при вводе пароля.
+Затем, в функции handlepassword,
 this.auth.password = event.target.value;
  
-Retrieve the password value via the html onchange event and then, assign it to the password field of the global variable auth.
- It was very simple. 
-So far, I have done the validation file of the keystore file.
- In the next lecture, I'll create a secret key and add my account information to Wallet.
+Получите значение пароля через событие html onchange, а затем присвойте его полю пароля глобальной переменной auth.
+  Это было очень просто.
+Итак я сделал файл проверки файла хранилища ключей.
+  В следующей лекции я создам секретный ключ и добавлю информацию о своей учетной записи в кошелек.
  
 ## 5.7 Account verification (integrate wallet)
  
