@@ -440,155 +440,155 @@ this.auth.password = event.target.value;
 Итак я сделал файл проверки файла хранилища ключей.
   В следующей лекции я создам секретный ключ и добавлю информацию о своей учетной записи в кошелек.
  
-## 5.7 Account verification (integrate wallet)
+## 5.7 Проверка аккаунта (интеграция кошелька)
  
 
-We have completed parts for retrieving the keystore file and the typing password, 
-now we will check to see if the account is successfully verified when we send this information to the baobab node. 
-Before that, I will replace http in rpcURL to https. 
-Take a look at the Index.html. 
-When I click submit button, it calls handlelogin function. 
-So let’s implement the function. 
-First, make sure that the accesstype is a keystore.
+Мы закончили лекцию для получения файла хранилища ключей и ввода пароля,
+Теперь мы проверим, была ли учетная запись успешно подтверждена, когда мы отправляем эту информацию на ноду baobab.
+Перед этим я заменю http в rpcURL на https.
+Посмотрите на Index.html.
+Когда я нажимаю кнопку отправки, она вызывает функцию handlelogin.
+Итак, давайте реализуем функцию.
+Сначала убедитесь, что accesstype является хранилищем ключей.
 if (this.auth.accessType === 'keystore') { 
 }
 
-The reason we write this ‘if’ statement is that when verifying an account, we use a keystore or a private key.
-We use only keystore for now. 
-However, I added these if statements so that when you want to use a private key to verify, 
-you can use it. and please add `try catch` statement right below. 
+Причина, по которой мы пишем оператор if, заключается в том, что при проверке учетной записи мы используем хранилище ключей или закрытый ключ.
+Сейчас мы используем только хранилище ключей.
+Однако я добавил эти операторы if, чтобы, когда вы хотите использовать закрытый ключ для проверки,
+Вы можете использовать if и, пожалуйста, добавьте оператор `try catch` ниже.
  
  
 try {       
 } catch (e) 
 }
 
-It is time to finally use the caver instance. 
-I'll give you a quiz here. 
-What can we earn from the combination of the keystore file and password? 
-If you remember well, you can know right away. 
-Yes, you can get your private key. 
-This secret key allows you to create a Wallet instance. 
-So the first thing you need to do is to get your secret key through your keystore file and password.
+Настало время, наконец, использовать Caver.
+Я задам вам задачу.
+Что мы можем иметь на комбинации файла хранилища ключей и пароля?
+Если вы хорошо запоминаете, вы можете ответить сразу.
+Да, вы можете получить свой закрытый ключ.
+Этот секретный ключ позволяет вам создать экземпляр кошелька.
+Поэтому первое, что вам нужно сделать, это получить свой секретный ключ через файл хранилища ключей и пароль.
 const privateKey = cav.klay.accounts.decrypt(this.auth.keystore, this.auth.password).privateKey;
 
-You can use the decrypt function through the accounts member of the caver instance. 
-It means to decrypt. 
-If you decrypt it, you can return the decrypted account object by passing the contents of the keystore file and the password as arguments. 
-There are various members in the object, and among them, we get the private key and store it in the constant. 
-If there is an error in decrypting, a message will be sent.
+Вы можете использовать функцию расшифровки через компоненты учетных записей caver.
+Вы можете это расшифровать.
+Если вы расшифровали его, вы можете вернуть расшифрованный объект учетной записи, передав в качестве аргументов содержимое файла хранилища ключей и пароль.
+В объекте есть различные компоненты, и среди них мы получаем закрытый ключ и сохраняем его в константе.
+Если при расшифровке возникнет ошибка, будет отправлено сообщение.
 $('#message').text('비밀번호가 일치하지 않습니다.');
 $(‘#message’).text(‘password is not matched.’);
  
-If there is no error, it will create a Wallet instance through your secret key.
+Если ошибки нет, он создаст экземпляр кошелька через ваш секретный ключ.
  
 this.integrateWallet(privateKey);
 
 
 
-Pass the private key to the integratewallet function. 
-Now, go to the integratewallet function. 
-Here we add the code that gets the Wallet instance by using privatekey.
+Передайте закрытый ключ в функцию integratewallet.
+Теперь перейдите к функции integratewallet.
+Здесь мы добавляем код, который получает экземпляр кошелька с помощью privatekey.
  
 const walletInstance = cav.klay.accounts.privateKeyToAccount(privateKey);
  
 
-This walletinstance has my account information. 
-Then add this instance to my Wallet.
+Этот кошелек содержит информацию о учетной записи.
+Затем добавьте этот экземпляр в мой кошелек.
 cav.klay.accounts.wallet.add(walletInstance)
  
 
-If you add my account to caver wallet, 
-you can easily recall your account information through caver instance when you create a transaction in the future. 
-The next step is to store the Wallet instance in the session storage. 
-SessionStorage will store the Wallet instance in storage space within the web browser until the tab is closed or the web browser is turned off.
+Если вы добавите мою учетную запись в кошелек Caver,
+Вы можете легко вызвать информацию о своей учетной записи через  Caver при создании транзакции в будущем.
+Следующим шагом является сохранение экземпляра кошелька в хранилище сеанса.
+SessionStorage будет хранить экземпляр кошелька в области хранения в веб-браузере до тех пор, пока вкладка не будет закрыта или веб-браузер не будет отключен.
 sessionStorage.setItem('walletInstance', JSON.stringify(walletInstance))
  
  
 
-SetItem receives the key value as a pair. 
-The first parameter is key and the second parameter is value. 
-So, I'll have to load my account information into the session later. 
-When you call walletInstance with a key value, the value stored in the pair is automatically loaded.
-The reason for using sessionStorage is to keep the account logged in. 
-Because my account information stored in my caver wallet disappear when I visit another site or the page refreshes that information. 
-However, if you save to session storage, 
-your account information will still be maintained even if you visit another site for a while and then return to it or refresh the page. 
-So I will implement a Wallet instance session in the start function later and keep it logged in. 
-Right now I need to update the UI. 
-Now that we have completed account verification via integrateWallet, we need to change the UI appropriately.
+SetItem получает значение ключа в виде пары.
+Первый параметр является ключем, а второй параметр является значением.
+Итак, мне нужно будет загрузить информацию о моей учетной записи в сеанс.
+Когда вы вызываете walletInstance со значением ключа, значение, сохраненное в паре, загружается автоматически.
+Причиной использования sessionStorage является сохранение учетной записи в системе.
+Потому что информация моего аккаунта, хранящаяся в моем кошельке, исчезает, когда я захожу на другой сайт или страница обновляет эту информацию.
+Тем не менее, если вы сохраните в хранилище сеанса,
+информация о вашей учетной записи будет сохраняться, даже если вы на некоторое время посетите другой сайт, а затем вернетесь к нему или обновите страницу.
+Поэтому я буду реализовывать сеанс экземпляра кошелька в функции start позже и держать его в системе.
+Прямо сейчас мне нужно обновить интерфейс.
+Теперь, когда мы завершили проверку аккаунта через integrateWallet, нам нужно соответствующим образом изменить интерфейс.
 this.changeUI(walletInstance);  
 
-I'm sending a Wallet instance to the changeUI function. 
-So what do we do with the changeUI function? 
-Close your modal.
+Я отправляю экземпляр кошелька в функцию changeUI.
+Так что же нам делать с функцией changeUI?
+Закройте свой модал.
 $('#loginModal').modal('hide');
  
 
-Hide the login button either.
+Также, скройте кнопку входа.
 $("#login").hide();
  
-Also, change the Logout button that you hid before.
+Кроме того, измените кнопку выхода, которую вы спрятали ранее.
  
 $('#logout').show();
 
-And since you are logged in, I want my account address to be visible.
+И поскольку вы вошли в систему, я хочу, чтобы адрес моей учетной записи был виден.
 $('#address').append('<br>' + '<p>' + '내 계정 주소: ' + walletInstance.address + '</p>');   
  
 
-This code tells me that it shows the account address in html where the id attribute is address. 
-I will go to index.html and add one div.
+Этот код говорит мне, что он показывает адрес учетной записи в HTML, где атрибут id является адресом.
+Я пойду в index.html и добавлю один div.
   <div class="text-center" id="address"></div>    
 
-Yes, you can see my account address at this location. 
-I will do it here. 
-Now let's test it. 
-Click Login button and open the keystore file. 
-If you enter your password and press the submit button, your account is verified and the logout button appears. 
-Below you can see my account address. 
-Finally, let's implement the function to log out. 
-Go to Index.html. 
-Note that when I click the logout button, I call the handlelogout function. 
-I'll go there. 
-Here we will call a function called removeWallet.
+Да, вы можете увидеть адрес моей учетной записи в этом месте.
+Я сделаю это здесь.
+Теперь давайте проверим.
+Нажмите кнопку «Вход» и откройте файл хранилища ключей.
+Если вы введете свой пароль и нажмете кнопку отправки, ваша учетная запись будет подтверждена и появится кнопка выхода из системы.
+Ниже вы можете увидеть адрес учетной записи.
+Наконец, давайте реализуем функцию выхода из системы.
+Перейдите на Index.html.
+Обратите внимание, что когда я нажимаю кнопку выхода из системы, я вызываю функцию handlelogout.
+Перехожу туда.
+Здесь мы будем вызывать функцию с именем removeWallet.
 this.removeWallet();
  
 
-We will clear the wallet and clear the sessionstorage with this function. 
-Go to the removeWallet function and add this code.
+С помощью этой функции мы очистим кошелек и сессионное хранилище.
+Перейдите к функции removeWallet и добавьте этот код.
 cav.klay.accounts.wallet.clear();
  
-This is the process of erasing my Wallet instance: account information that was added to wallet. 
-Then clear the session.
+Это процесс удаления моего экземпляра кошелька: информация об учетной записи, которая была добавлена в кошелек.
+Затем очистите сеанс.
  
 sessionStorage.removeItem('walletInstance');
 
-When you’re erasing it, just enter the key value. 
-Finally, it calls the reset function and ends.
+Когда вы удаляете его, просто введите значение ключа.
+Как результат, он вызывает функцию сброса и завершается.
 this.reset();
  
 
-This reset function simply initializes the global variable auth. 
-Go to the reset function and initialize auth.
+Эта функция сброса просто инициализирует глобальную переменную auth.
+Можно перейти к функции сброса и инициализировать авторизацию.
 this.auth = {
       keystore: '',
       password: ''
     };
  
 
-There is also an accesstype in Auth. 
-But, you don’t have to erase accesstype because it will be a keystore anyway. 
-Instead, when we logged in, a value will be entered to the keystore and password fields. 
-I want to log out and safely erase it. 
-Go back to the handleLogout function and put the code that refreshes the page and finish it. 
-The reason for the refresh is to return to the initial state UI.
+Существует также accesstype в Auth.
+Но вам не нужно удалять accesstype, потому что это все равно будет хранилище ключей.
+Вместо этого, после того мы вошли в систему, значение будет введено в поля хранилища ключей и пароля.
+Я хочу выйти и безопасно стереть все.
+Вернитесь к функции handleLogout и вставьте код, который обновляет страницу, и завершите ее.
+Причиной обновления является возврат в исходное состояние интерфейса.
 location.reload();
  
 
-Now let's do the test and finish. 
-Clicking the Logout button, the account information will disappear and you are returned to the initialization screen by refreshing. 
-Now that you've completed your account verification logic, 
-let's complete the section that maintains account verification through session storage in the next class.
+Теперь давайте сделаем тест и закончим.
+При нажатии кнопки «Выход» информация об учетной записи исчезнет, и вы вернетесь к экрану инициализации после обновления.
+Теперь, когда вы завершили логику проверки аккаунта,
+давайте закончим раздел, который поддерживает проверку аккаунта через хранилище сеансов в следующем уроке.
  
  
 ## 5.8 Account Session 
