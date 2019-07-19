@@ -591,25 +591,25 @@ location.reload();
 давайте закончим раздел, который поддерживает проверку аккаунта через хранилище сеансов в следующем уроке.
  
  
-## 5.8 Account Session 
+## 5.8 Сеанс аккаунта
 
-Let's see what happens when we log in and refresh the page. 
-Click the login button and select the keystore file. 
-In this state, press F5 to refresh. 
-Then it’ll be reset. 
-It would be good if I kept logged in. 
-How do I do it? 
-If we succeeded in logging in, we saved the account storage information to the session storage. 
-I will use this now. 
-The first function that is been loaded when BApp runs is the start function. 
-Here I retrieve my account information stored in session storage. 
-So, let's go to the start function,
-const walletFromSession = sessionStorage.getItem('walletInstance');
- 
+Давайте посмотрим, что произойдет, когда мы войдем и обновим страницу.
+Нажмите кнопку входа и выберите файл хранилища ключей.
+В этом состоянии нажмите F5, с целью обновить страницу.
+Все будет сброшено.
+Было бы хорошо, если бы я продолжал входить в систему.
+Как мне это сделать?
+Если нам удалось войти в систему, мы сохранили информацию о хранилище учетной записи в хранилище сеанса.
+Я буду использовать этот факт сейчас.
+Первая функция, которая загружается при запуске BApp, - это функция запуска.
+Здесь я получаю информацию об учетной записи, хранящуюся в хранилище сеансов.
+Итак, давайте перейдем к функции запуска,
+const walletFromSession = sessionStorage.getItem ('walletInstance');
+ 
 
-If you use getItem and pass the value of the key, the value stored in the pair is fetched and stored in the constant. 
-I saved my Wallet instance. 
-Next, make sure the walletFromSession contains a value.
+Если вы используете getItem и передаете значение ключа, значение, сохраненное в паре, извлекается и сохраняется в константе.
+Я сохранил свой экземпляр кошелька.
+После этого убедитесь, что walletFromSession содержит значение.
 if (walletFromSession) {
  
 }
@@ -623,33 +623,33 @@ try {
   }
  
 
-Then add your account information back to the caver wallet.
+Затем добавьте информацию о своей учетной записи обратно в кошелек.
 cav.klay.accounts.wallet.add(JSON.parse(walletFromSession));
 
-When the page is refreshed or re-visited, the existing account information that was added to Wallet is erased, so I add it back through the session. 
-Update the UI to show that you are logged in as next.
+Когда страница обновляется или повторно посещается, информация о существующей учетной записи, которая была добавлена в кошелек, стирается, поэтому я добавляю ее обратно через сеанс.
+Обновите пользовательский интерфейс, чтобы показать, что вы вошли как следующий участник.
   this.changeUI(JSON.parse(walletFromSession));
  
 
-This will turn into a logout button and show me your account address.  
-Finally, when the value in sessionStorage is not a valid Wallet instance, it goes to the catch statement. 
-Then delete the walletinstance in the session storage.
+Появится кнопка выхода и покажет адрес вашей учетной записи.
+Наконец, если значение в sessionStorage не является допустимым экземпляром Wallet, оно переходит к оператору catch.
+Затем удалите кошелек в хранилище сеансов.
 sessionStorage.removeItem('walletInstance');
  
-It’s been done here. 
-Now, let’s test it.
-When you refresh it, it keeps logged in without returning to the initialization state. 
-So far, we have implemented a part of maintaining account verification.
+Готово.
+Теперь давайте проверим.
+Когда вы обновляетесь, страница продолжает входить в систему, не возвращаясь в состояние инициализации.
+До сих пор мы реализовали часть ведения проверки аккаунта.
  
  
  
  
-## 5.9 KLAY transfer via contract (deposit)
+## 5.9 Перевод KLAY через контракт (депозит)
  
  
-I will now send the KLAY to the contract using the operator account. 
-First, let's create a UI. 
-You can create it under the div class row.
+Теперь я отправлю KLAY на контракт, используя учетную запись оператора.
+Сначала давайте создадим пользовательский интерфейс.
+Вы можете создать его в строке класса div.
  
  
 <br />     
@@ -670,256 +670,256 @@ You can create it under the div class row.
     </div>
  
 
-Please fuzz the video and add this part. 
-I will explain briefly. 
-I have set up the UI part to send money to the contract invisible via css. 
-We’ve set the deposit function to run when we enter the amount and press the transfer button. 
-Now let's go to the deposit function and implement it. 
- 
-I will explain here how to implement it first. 
-Klay transfer to a contract can only be made with an owner account. 
-This is only possible with the account of the person who deployed the Contract. 
-In other words, only the organizer of this event can send it. 
-If we are using owner account, we will access the deposit function in the contract and transfer the KLAY. 
-Flow is very simple. 
-First, we will create an instance so that we can access the contract we have deployed. 
-When you create a contract instance, you need the abi information and address of the contract you deployed. 
-Under the cav constants at the top, 
+Пожалуйста, посмотрите видео и добавьте эту часть.
+Я объясню вкратце.
+Я настроил часть пользовательского интерфейса для отправки денег на контракт, невидимый через CSS.
+Мы настроили функцию запуска депозита, когда вводим сумму и нажимаем кнопку перевода.
+Теперь перейдем к функции депозита и реализуем ее.
+ 
+Я объясню, как реализовать это в первую очередь.
+Перевод Klay на контракт возможен только с аккаунта владельца.
+Это возможно только с аккаунта лица, которое развернуло Контракт.
+Другими словами, только организатор этого события может отправить Klay.
+Если мы используем учетную запись владельца, мы получим доступ к функции депозита в договоре и переведем KLAY.
+Процесс очень прост.
+Сначала мы создадим пример, чтобы получить доступ к развернутому нами контракту.
+Когда вы создаете экземпляр контракта, вам нужна информация abi и адрес развернутого контракта.
+Под константами в верхней части,
 const agContract = new cav.klay.Contract(DEPLOYED_ABI, DEPLOYED_ADDRESS);
 
-Here deployed_abi and deployed_address are global constants that can be used in BApp. 
-Once we deploy the contract, we save information to the deployedabi file and the deployedaddreess file. 
-Set it in the webpack so that we can read this information and it use it as a global constant. 
-If you go to the Webpack.config.js file, there will be an annotated section. 
-Solve this now. 
-At compile time in webpacks, run this part to set global constants called deployed address and deployed abi.
- 
-Simply put, we read the deployedaddress file through the file system and assign the contract address to the global constant. 
-In the same way, we store the abi information in global constants which is in deployedabi file. 
-Let’s return to the Index.js file.
+Здесь deployed_abi и deployed_address являются глобальными константами, которые могут использоваться в BApp.
+После развертывания контракта мы сохраняем информацию в файле deployedabi и файле deployedaddreess.
+Установите его в веб-пакете, чтобы мы могли прочитать эту информацию и использовать ее как глобальную константу.
+Если вы перейдете в файл Webpack.config.js, там будет аннотированный раздел.
+Сделайте это сейчас.
+Во время компиляции в веб-пакетах запустите эту часть, чтобы установить глобальные константы, называемые развернутым адресом и развернутым abi.
+ 
+Проще говоря, мы читаем файл развернутого адреса через файловую систему и присваиваем адрес контракта глобальной константе.
+Таким же образом мы храним информацию abi в глобальных константах, которые находится в файле deployedabi.
+Вернемся к файлу Index.js.
  
  
 
-So remember that these two abi and address information sent to the creator of the contract instance are passed through the global constants generated by the webpack. 
-Now that we've created a four contract instance, we'll continue with the deposit function. 
-There’s something we have to check first before sending money. 
-You should verify that the account you just signed in is an owner account. 
-So I have to bring up two pieces of information. 
-First, I'm retrieving the currently logged in account information. 
-Second, I’ll retrieve the owner state variable stored in the contract. 
-First, I will retrieve my login information.
+Итак, помните, что эти две abi и адресная информация, отправленные создателю экземпляра контракта, передаются через глобальные константы, сгенерированные веб-пакетом.
+Теперь, когда мы создали пример четырех контрактов, мы продолжим с функцией депозита.
+Мы должны кое-что проверить, прежде чем отправлять деньги.
+Вы должны убедиться, что вы только что вошли в учетную запись владельца.
+Поэтому я должен привести две части информации.
+Во-первых, я получаю информацию об учетной записи, зарегистрированной в данный момент.
+Во-вторых, я получу переменную состояния владельца, хранящуюся в контракте.
+Сначала я получу информацию для входа в систему.
 const walletInstance = this.getWallet();
 
-Go to the getwallet function and get the account information that exists in the current caver wallet.
+Перейдите к функции getwallet и получите информацию об учетной записи, которая существует в текущем кошельке.
 if (cav.klay.accounts.wallet.length) {
       return cav.klay.accounts.wallet[0];
     }
 
-Wallet [0] is the first account added to Wallet, the account I am currently logged into. 
-You’ve finished function implementation so far. 
-Next, let's call the value of the owner's state variable in the contract. 
-Go to the callOwner function
+Wallet [0] - это первая учетная запись, добавленная в кошелек, в которую я вошел.
+Вы уже завершили реализацию функции.
+Далее, давайте назовем значение переменной состояния владельца в контракте.
+Перейдите к функции callOwner
 return await agContract.methods.owner().call();
  
 
-We’ll access the owner function through the additiongame contract instance we created and call the value. 
-Use the await keyword to receive values ​​asynchronously. 
-Since we made the necessary contents before we send you money, we'll continue with the deposit function.
+Мы получим доступ к функции владельца через созданный нами привер контракта на приложение игры и вызовем значение.
+Используйте ключевое слово await для асинхронного получения значений.
+Поскольку мы сделали необходимые действия до того, как отправим деньги, мы продолжим выполнять функцию депозита.
 if (walletInstance) {
  
     }
  
 
-If a Wallet instance exists through the getwallet function, 
-compare the current logged in account address with the account address of the owner returned from the contract.
+Если экземпляр Wallet существует через функцию getwallet,
+то нужно сравнить текущий зарегистрированный адрес учетной записи с адресом учетной записи владельца, полученный из контракта.
 if (await this.callOwner() !== walletInstance.address) return; 
  
 
-If we compare them, but the values ​​are different, we do not proceed anymore and we terminate the function.
+Если мы сравним их, но значения будут другими, мы больше не продолжаем и завершаем функцию.
  If it is the same
 else {
 }
  
 
-Gets the value entered for Html input.
+Получим значение для ввода HTML.
 var amount = $('#amount').val();
 
-If the input value exists
+Если входящее значение существует
 if (amount) {
 }
  
-Send the value to the deposit function using a contract instance.
+Отправьте значение в депозитную функцию, используя экземпляр контракта.
  
 agContract.methods.deposit().send({
  
 })
 
-Here we send a transaction object as a factor of send. 
-We need to specify three things. 
-First we have to tell who is calling this function.
+Сейчас мы отправляем объект транзакции как фактор отправки.
+Нам нужно указать три вещи.
+Сначала мы должны сказать, кто вызывает эту функцию.
 from: walletInstance.address,
- 
-I said that we’ll call this function with the currently logged in account. 
-Note that Walletinstance's address is the account that has completed account verification and it has the right to sign the transaction. 
-So I can’t put any address in ‘from’. 
-Only addresses that have been verified in the BApp can be used as the value. 
-And set the gas to be consumed within 250,000.
+ 
+Я сказал, что мы будем вызывать эту функцию для текущего зарегистрированного аккаунта.
+Обратите внимание, что адрес Walletinstance - это учетная запись, которая завершила проверку учетной записи, и она имеет право подписать транзакцию.
+Так что я не могу поместить любой адрес в поле «from».
+В качестве значения могут использоваться только адреса, которые были проверены в BApp.
+И установите потребление газа в пределах 250000.
  
 gas: '250000',
  
 
-Since the deposit function in the contract is payable, you must pass the value field.
+Поскольку функция депозита в договоре подлежит оплате, вы должны передать поле значения.
 value:
  
 
-We have to convert the number received from html input to peb which is the minimum unit of KLAY and pass it. 
-Convert it by using the utility of caver library.
+Мы должны преобразовать число, полученное от ввода html, в peb, который является минимальной единицей KLAY, и передать его.
+Преобразуйте его, используя утилиту библиотеки caver.
 cav.utils.toPeb(amount, "KLAY")
 
-You can now send money with the contract deposit function. 
-But I can use the information that can be received asynchronously, rather than finishing the transaction like this.
+Теперь вы можете отправлять деньги с помощью функции депозитного контракта.
+Но я могу использовать информацию, которая может быть получена асинхронно, вместо завершения транзакции, например
 .once('transactionHash', (txHash) => {
     console.log(`txHash: ${txHash}`);
 })
  
 
-First, I can get the transaction hash, and I made it visible on the console. 
-Note that the console log wrapper is not a single quotation mark, but a quotation mark on the left of the number 1. 
-Be careful. 
-Next, you can get a receipt.
+Во-первых, я могу получить хеш транзакции, и я сделал это видимым на консоли.
+Обратите внимание, что оболочка журнала консоли - это не одиночная кавычка, а кавычка слева от цифры 1.
+Будьте осторожны.
+Далее вы можете получить подтверждение.
 .once('receipt', (receipt) => {
    console.log(`(#${receipt.blockNumber})`, receipt);          
 })
 
-Getting a receipt means that the transaction was successfully added to the block. 
-So, you can check the receipt to see the block where the transaction was added. 
-If transaction processing fails, you might get an error.
+Получение подтверждения означает, что транзакция была успешно добавлена в блок.
+Таким образом, вы можете проверить подтверждение, и увидеть блок, в который была добавлена транзакция.
+Если обработка транзакции не удалась, вы можете получить ошибку.
 .once('error', (error) => {
    alert(error.message);
   }); 
  
 
-If there is an error, a message will be display. 
-I've done the logic to check success after sending the transaction. 
-Finally, if there is no amount received in html input, add a return statement that terminates the function.
+Если есть ошибка, появится сообщение.
+Я написал логику, чтобы проверить успех после отправки транзакции.
+Наконец, если в html-вводе нет полученной суммы, добавьте оператор return, который завершает функцию.
 return;
  
 
-I have completed the part that sends the KLAY to the deposit function of contract, and I will change the UI and test it in the next class. 
+Я завершил этап, которая отправляет KLAY в функцию депозита контракта, и я изменю пользовательский интерфейс и протестирую его в следующем уроке.
  
  
-## 5.10 KLAY transfer via contract (UI change and testing)
+## 5.10 Перевод KLAY по контракту (изменение и тестирование интерфейса)
  
  
 
-I will try changing UI and testing. 
-When we sent a KLAY to the deposit function in the previous course and received a receipt, the transaction was successful. 
-What should I do after I succeeded? 
-It would be nice if the system could show me the reminder message.
+Я постараюсь изменить пользовательский интерфейс и провести тестирование.
+Когда мы отправили KLAY в функцию депозита в предыдущем курсе и получили подтверждение, транзакция прошла успешно.
+Что я должен делать после того, как мне это удалось?
+Было бы хорошо, если бы система могла показать мне сообщение с напоминанием.
    alert(amount + " KLAY를 컨트랙에 송금했습니다.");  
  
 
-And I will refresh the page to see the balance of the contract.
+И я обновлю страницу, чтобы увидеть баланс договора.
    location.reload();     
 .
 
-I said that I’m going to make the balance of the contract visible. 
-Remember that we created a function that would load the contract's balance when we wrote the smart contract. 
-We will call this getBalance function so we can see the balance of the contract. 
-First, we'll add a div that displays the contract's balance in html. 
-Go to Index.html and add one div under the address that shows my account address.
+Я сказал, что собираюсь сделать баланс контракта видимым.
+Помните, что мы создали функцию, которая загружала бы баланс контракта, когда мы писали смартконтракт.
+Мы назовем эту функцию getBalance, она поможет увидеть баланс контракта.
+Сначала мы добавим div, который отображает баланс контракта в html.
+Перейдите в Index.html и добавьте один div под адресом, который показывает адрес моей учетной записи.
   <div class="text-center" id="contractBalance"></div>
 
-And then we'll show you the balance of the contract here. 
-Now that the view is ready, let's create a function that loads the balance from the backend. 
-Go to the callcountractbalance function and add the code.
+И тогда мы покажем вам баланс контракта здесь.
+Теперь, когда представление готово, давайте создадим функцию, которая загружает баланс из серверной части.
+Перейдите к функции callcountractbalance и добавьте код.
 return await agContract.methods.getBalance().call();
  
 
-The part that accesses the getbalance function through a contract instance and loads the value. Yes, it was simple. 
-Where do I call this callcountractbalance function from now? 
-Where should I call it? 
-If the transaction succeeds in the deposit function and receives a receipt, it refreshes the page via location.reload (). 
-What is the first function that executes when the page is refreshed? 
-The start function is executed first. 
-Then, we call the changeUI function from the start function. 
-I need to add code to load the contract balance from the changeUI function that changes UI immediately.
+Часть, которая обращается к функции getbalance через экземпляр контракта и загружает значение. Да, это было просто.
+Откуда я вызываю эту функцию callcountractbalance?
+Как мне это назвать?
+Если транзакция успешно выполняется в функции депозита и получает подтверждение, она обновляет страницу с помощью location.reload ().
+Какова первая функция, которая выполняется при обновлении страницы?
+Функция запуска выполняется первой.
+Затем мы вызываем функцию changeUI из функции start.
+Мне нужно добавить код для загрузки баланса контракта из функции changeUI, которая немедленно меняет интерфейс.
 $('#contractBalance').append('<p>' + '이벤트 잔액: ' + cav.utils.fromPeb(await this.callContractBalance(), "KLAY") + ' KLAY' + '</p>');     
 
-It's a bit long. 
-I’ll explain. 
-We will add a message to the part that shows the contract balance In html. 
-Call the callContractBalance function to get the balance. 
-However, the balance is then loaded into the KLAY minimum unit, peb. 
-That would make it hard to see how much is left in the user's seat, because the unit is too big. 
-So the caver utility has a function called fromPeb.
-It is a function that can convert from peb to another unit. 
-I have specified in the second parameter to convert to KLAY. 
-As a result, it shows the contract balance converted into KLAY in html.
- 
+Это немного долго.
+Я объясню.
+Мы добавим сообщение в часть, которая показывает баланс контракта в HTML.
+Вызовите функцию callContractBalance, чтобы получить баланс.
+Однако баланс загружается в минимальных единицах KLAY, peb.
+Это затруднило бы понимание того, сколько осталось, потому что цифра слишком большая.
+Так что утилита caver имеет функцию fromPeb.
+Это функция, которая может конвертировать из peb в другую единицу.
+Я указал второй параметр для преобразования в KLAY.
+В результате он показывает сальдо контракта, преобразованное в KLAY в html.
+ 
 
-Lastly, the KLAY transfer to the contract must be set up only for the owner account. 
-You only have to give permission to the event organizer. 
-So I will change it to show the UI that can be transferred only when I log in with the owner account. Go to the changeUI function
+Наконец, перевод KLAY в контракт должен быть установлен только для учетной записи владельца.
+Вам нужно только дать разрешение организатору процесса.
+Поэтому я изменю функцию, чтобы она моглаотображать пользовательский интерфейс, который можно передавать только при входе в систему с учетной записью владельца. Перейдем к функции changeUI
 if (await this.callOwner() === walletInstance.address) {
       $("#owner").show(); 
     }     
  
-I have set the owner div to show only when the owner account address and the logged in account address are the same. 
-In html, the owner div is set invisible by default.
-So, when you log in with the owner account, you will see this part.
-Now let's try testing. 
-I will re-deploy it once. 
-First, make sure that your account's secret key is properly entered in truffle.js. 
-I will re-ploy it from the terminal.
-‘truffle deploy -compile-all -reset -network klaytn’ I'm re-deploying it for people who have not deployed it. 
-Your deployment is over. 
-Let's check it by running npm run dev. Press F12 to open the console window. 
-Click Login button
-Since you are logged in with your owner account, you can see the part where you can send money. 
-Let's send money now. Send 1 KLAY.
+Я установил, чтобы div владельца показывался только тогда, когда адрес учетной записи владельца и адрес зарегистрированной учетной записи совпадают.
+В html владелец div по умолчанию установлен невидимым.
+Итак, когда вы войдете в систему учетной записью владельца, вы увидите эту часть.
+Теперь давайте попробуем протестировать.
+Я переустановлю его один раз.
+Во-первых, убедитесь, что секретный ключ вашей учетной записи правильно введен в truffle.js.
+Я перенесу его из терминала.
+‘truffle deploy -compile-all -reset -network klaytn’ Я повторно развернул его для людей, которые его не развернули.
+Ваше развертывание окончено.
+Давайте проверим это, запустив npm run dev. Нажмите F12, чтобы открыть окно консоли.
+Нажмите кнопку Войти
+Поскольку вы вошли в свою учетную запись владельца, вы можете увидеть часть, где вы можете отправить деньги.
+Давайте  отправим деньги. Отправьте 1 KLAY.
  
  
 
-You can see the transaction hash and receipt information through the console log as your transaction succeeds. 
-The notification message works well. 
-It seems that the time required for the transaction was less than 3 seconds. 
-In these 3 seconds, there are four processes from creating the transaction to creating the block and propagating it to the network when the transaction is completed. 
-Compared to other block-chain platforms, the processing speed is very fast. 
-Click the notification message, the page refreshes, and the start function is called first, 
-and the updated contract balance is displayed by the changeUI function in it. 
-The transaction function is working well. 
-I'd like to have a load spinner shows that the transaction works well or not. 
-This is not a requirement, but I recommend you to do it for a good UI. 
-Go to Index.js and import spin.js to the top.
+Вы можете увидеть хэш транзакции и информацию о получении через журнал консоли, если ваша транзакция прошла успешно.
+Уведомление работает.
+Похоже, что время, необходимое для транзакции, составило менее 3 секунд.
+За эти 3 секунды происходит четыре процесса от создания транзакции до создания блока и его распространения в сети после завершения транзакции.
+По сравнению с другими блокчейн платформами скорость обработки очень высокая.
+Нажмите на уведомление, страница обновится, и сначала будет вызвана функция запуска,
+и обновленный баланс контракта, функцией changeUI.
+Функция транзакции работает хорошо.
+Я хотел бы, чтобы счетчик нагрузки показал, как работает транзакция, хорошо или нет.
+Это не является обязательным требованием, но я рекомендую вам сделать это для хорошего пользовательского интерфейса.
+Перейдите в Index.js и импортируйте spin.js.
 import {Spinner} from 'spin.js';
 
-Go to the showspinner function and make it return the spinner instance.
+Перейдите к функции showpinner и сделайте так, чтобы она возвращала экземпляр spinner.
 var target = document.getElementById('spin');
     return new Spinner(opts).spin(target);
 
-And call this function from the deposit function.
+И вызовите эту функцию из функции депозита.
 var spinner = this.showSpinner();
  
-After receiving a receipt, make the spinner stop.
+После получения подтвержения остановите spinner.
  
   spinner.stop();  
 
-Finally, add a div to show the spinner in html. <br /> Make it under the tag.
+Наконец, добавьте div, чтобы отобразить счетчик в html. Сделайте это под тегом <br/>.
 <div id="spin"></div>    
  
 
-Now let's try testing. 
-Yes. As the spinner comes out, a more spectacular scene is being produced. 
-The transfer function works well, and the UI is well reflected. 
-So far, I have covered the KLAY transfer from the owner account to the contract.
+Теперь давайте попробуем протестировать.
+Да. Когда spinner вращается, появляется подтвержение.
+Передаточная функция работает хорошо, а интерфейс хорошо отражается.
+Я показал перевод KLAY со счета владельца в контракт.
 
-## 5.11Generating a random number
+## 5.11 Генерация случайного числа
 
-Now let 's try to make an interesting part. 
-Let's create two random numbers to be used for addition. 
-I will decorate Html first. 
-Please add this code directly above the spin div.
+Теперь давайте попробуем сделать интересную часть задания.
+Давайте создадим два случайных числа, которые будут использоваться для сложения.
+Я буду улучшать HTML в первую очередь.
+Пожалуйста, добавьте этот код прямо над div.
 <div class="row text-center">
         <div id="game" style="display: none;">   
           <div class="yellow-box" id="start">       
@@ -939,75 +939,75 @@ Please add this code directly above the spin div.
 <br />
  
 
-I made it invisible with the css. 
-And I’ll make it visible after I log in. 
-Clicking on the start button calls the generateNumbers function. 
-The function will then generate two numbers, one for the num1 and one for num2. 
-To be used for addition. 
-And there is an input field to write the answer. 
-Finally, there is a button to submit your answers. 
-Simple html. Now, 
-I'll set it up so that only users who have been verified will see this part. 
-Go to the changeUI function and add it below logout.show () to show the game div.
+Я сделал это невидимым с помощью CSS.
+И я сделаю это видимым после того, как войду.
+Нажатие на кнопку запуска, она вызывает функцию generateNumbers.
+Затем функция сгенерирует два числа: одно для num1 и одно для num2.
+Они используются в приложении.
+Есть поле ввода, чтобы написать ответ.
+Наконец, есть кнопка для отправки ваших ответов.
+Простой HTML. Сейчас
+я настрою его так, чтобы эту часть могли видеть только пользователи, прошедшие проверку.
+Перейдите к функции changeUI и добавьте ее ниже logout.show (), чтобы показать игровой div.
 $('#game').show();
  
 
-Now let's check it out in html. 
-If you are logged in, you can see the nice UI of the yellow box in the middle. 
-Now I’ll set the numbers visible when you click on Start. 
-Let's create random numbers in the generatenumbers function.
+Теперь давайте проверим это в html.
+Если вы вошли в систему, вы можете увидеть приятный интерфейс желтого цвета в середине.
+Теперь я установлю числа, которые будут видны при нажатии на кнопку «Пуск».
+Давайте создадим случайные числа в функции чисел.
 var num1 = Math.random();
  
 
-First, we call the random function of the Math class. 
-The random function randomly generates a number with a decimal point below 0 and 1. 
-But if you do this, the number is too small, so I'm going to multiply it.
+Сначала мы вызываем случайную функцию класса Math.
+Случайная функция случайным образом генерирует число с десятичной точкой меньше 0 и 1.
+Но если вы сделаете это, число будет слишком маленьким, поэтому я собираюсь его умножить.
 var num1 = Math.random() * 50;
  
 
-This will generate a random number from 0 to 49. 
-But the problem should not be too easy, so I will add 10 to the generated value so that you can generate at least two digits.
+Это сгенерирует случайное число от 0 до 49.
+Но задача не должна быть слишком простой, поэтому я добавлю 10 к сгенерированному значению, чтобы вы могли генерировать как минимум две цифры.
 var num1 = (Math.random() * 50) + 10;
  
 
-Finally, we use the floor function to discard the decimal point.
+Наконец, мы используем функцию floor для отбрасывания десятичной точки.
 var num1 = Math.floor((Math.random() * 50) + 10);
  
-If you do this, you will have a decimal number between 10 and 59.
-Next, create another one.
+Если вы сделаете это, у вас будет десятичное число от 10 до 59.
+Далее создайте еще одно.
  
 var num2 = Math.floor((Math.random() * 50) + 10);
  
-Now we will store the added values of two numbers ​​in the session storage. 
-I'll save the answer.
+Теперь мы будем хранить значения двух чисел в хранилище сессии.
+Я сохраню ответ.
  
 sessionStorage.setItem('result', num1 + num2);    
 
-This will later bring the correct answer back when the user answers and will try to compare the answers given by the user. 
-Now that we've created the numbers, we'll have to use it. 
-When I click on Start in html, I will hide this beginning and make it show the question div below. And at the same time, I will make the two numbers generated from the function visible in the num1 and num2 fields. 
-Let's go back to the function and implement what we just said.
+Это позже даст правильный ответ, когда пользователь ответит, и попытается сравнить ответы, данные пользователем.
+Теперь, когда мы создали числа, мы должны их использовать.
+Когда я нажму на Start в html, я скрою это начало и покажу  div ниже. И в то же время я сделаю два числа, сгенерированных функцией, видимыми в полях num1 и num2.
+Давайте вернемся к функции и осуществим то, что мы только что сказали.
 $('#start').hide();
  
 
-Make the beginning invisible.
+Сделайте начало невидимым.
 $('#num1').text(num1);
 $('#num2').text(num2);
 
-Let it show the generated numbers in num1 and num2 fields. 
-And let it show the question div.
+Пусть система покажет сгенерированные числа в полях num1 и num2.
+И пусть это покажет вопрос div.
 $('#question').show(); 
 	
 
-Finally, move the focus to where I write the answers so that I can answer right away.
+Наконец, переместите фокус туда, где я пишу ответы, чтобы я мог ответить сразу.
 document.querySelector('#answer').focus();
 
-I will test it now. 
-When you click Start, your random numbers are generated and rendered in html. 
-Soon, focus moved to where I write the answer. 
-This is the end of today’s class and I will try to create a timer in the next class.
+Я проверю это сейчас.
+Когда вы нажимаете Пуск, ваши случайные числа генерируются и отображаются в формате HTML.
+Вскоре фокус переместился туда, где я пишу ответ.
+Это конец сегодняшнего урока, и я постараюсь создать таймер в следующем уроке.
 
-## 5.12  Generating a timer
+## 5.12  Генерация таймера
 
 
 
