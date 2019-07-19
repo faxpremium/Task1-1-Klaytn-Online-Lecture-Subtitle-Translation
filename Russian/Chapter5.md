@@ -1011,163 +1011,163 @@ document.querySelector('#answer').focus();
 
 
 
-Let's create a timer and set the timeout for the addition problem to 3 seconds.
- Go to Html and make a div that shows the timer. I'll make it right under the spin div.
+Давайте создадим таймер и установим таймаут для задачи сложения на 3 секунды.
+  Перейти к HTML и сделать div, который показывает таймер. Я сделаю это прямо под div.
 <div class="row text-center">
         <p id="timer"></p>
       </div>   
  
-Go to index.js and go to the showtimer function. Here we use the setInterval function to show the number to be counted down. We’ll make the problem disappear after 3 seconds and the screen revert back to the start click.
- 
+Перейдите к index.js и перейдите к функции showtimer. Здесь мы используем функцию setInterval, ее цель показать число, которое будет отсчитываться. Мы заставим задачу исчезнуть через 3 секунды, и экран вернется к начальному состоянию.
+ 
 
-Make a variable to save for 3 seconds.
+Сделайте переменную для сохранения в течение 3 секунд.
 $('#timer').text(seconds);
 
-Show number 3 directly to the html which is showing the timer. 
-I use the setinterval function and set it at 1 second interval.
+ПРивяжите номер 3 непосредственно к HTML, который показывает таймер.
+Я использую функцию setinterval и устанавливаю ее с интервалом в 1 секунду.
   var interval = setInterval(function() {  
   }, 1000);
  
 
-Now I can run something in 1 second interval.
+Теперь я могу запустить что-то с интервалом в 1 секунду.
 $('#timer').text(--seconds);  
  
 
-Decrement the number one by one to make it appear in html. 
-Now, the value of this seconds variable is 0, that is, reset it again when setinterval is 0 after 3 seconds.
+Уменьшите числа одно за другим, чтобы они появилось в html.
+Теперь значение этой переменной секунды равно 0, то есть, сбросить, когда setinterval равен 0 через 3 секунды.
 if (seconds <= 0) {
 }     
  
-When Seconds becomes 0
+Когда секунд становится 0
  
 $('#timer').text('');
  
 
-Initialize the number showing part
+инициализируйте номер, показывающий часть
      $('#answer').val('');
 답적었던input도 초기화시키구요	
 
-Also initialize the input that was answered.
+Также инициализируйте ввод, на который был дан ответ.
 $('#question').hide();
  
-Set the div not showing the problem. And,
+Установите div, не показывая задачу. А также,
  
 $('#start').show();          
  
 
-Show the div again that you can click start. Finally,
+Еще раз покажите div, что вы можете нажать старт. В заключение,
   clearInterval(interval);
  
 
-Use the clearInterval to stop the time running in setinterval. Yes, I have created the showtimer function. Now let's call this function in the generateNumbers function.
+Используйте clearInterval, чтобы остановить время, установленное в setinterval. Да, я создал функцию showtimer. Теперь давайте вызовем эту функцию в функции generateNumbers.
 this.showTimer();
  
-If you do this, as soon as you click Start, the timer will be created and count down will be started. Let's try testing.
-Click on Start. A timer will be generated below and start the count down for 3 seconds. After 3 seconds, it is reset again.
-So far, I have created a timer.
+Если вы сделаете это, то как только вы нажмете Пуск, будет создан таймер и начнется обратный отсчет. Давайте попробуем проверить.
+Нажмите на Пуск. Ниже будет сгенерирован таймер и начнется обратный отсчет в течение 3 секунд. Через 3 секунды он сбрасывается.
+Итак, я создал таймер.
  
  
  
-## 5.13 Submitting answers and receiving KLAY
+## 5.13 Отправка ответов и получение KLAY
  
-This is the last class. If the user submits the answer and the answer is correct, let's implement the part that sends the KLAY to the user account from the contract. Go to the submitAnswer function. Load the value of correct answer which is stored in the session storage.
+Это последний урок. Если пользователь отправляет ответ и ответ правильный, давайте реализуем часть, которая отправляет KLAY на учетную запись пользователя из контракта. Перейдите к функции submitAnswer. Загрузите значение правильного ответа, которое хранится в хранилище сеанса.
 const result = sessionStorage.getItem('result');
  
 
-And, store the answers that the user has made in the variables.
+И сохраните ответы, которые дал пользователь в переменных.
 var answer = $('#answer').val();  
  
 
-Now, do a comparison.
+Теперь проведите сравнение.
 if (answer === result) { }
  
 
-If the user has answered the correct answer, press the confirm button while opening the confirm message window and send the KLAY to the user.
+Если пользователь дал правильный ответ, нажмите кнопку подтверждения при открытии окна сообщения подтверждения и отправьте пользователю KLAY.
 if (confirm("대단하네요^^ 0.1 KLAY 받기")) { }
  
 
-If the user clicked the OK button, make sure the balance in the contract is at least 0.1 KLAY before sending it.
+Если пользователь нажал кнопку «ОК», перед отправкой убедитесь, что баланс в контракте составляет не менее 0,1 KLAY.
 if (await this.callContractBalance() >= 0.1) { }
 
-If so, call the receiveKlay function.
+Если это так, вызовите функцию receiveKlay.
 this.receiveKlay();
  
 
-If it does not exist, send a notification message.
+Если не существует, отправьте уведомление.
 else { alert("죄송합니다. 컨트랙의 KLAY가 다 소모되었습니다."); }    
  
 
-Finally, if the user did not get the correct answer, Send a notification.
+Наконец, если пользователь не дал правильный ответ, отправьте уведомление.
 else { alert("땡! 초등학생도 하는데 ㅠㅠ"); }
  
  
  
 
-Yes your submitanswer function is up to here. 
-Let's test it once. 
-This message is displayed when the answer is wrong. 
-When this is done, a confirm message window will appear to receive the KLAY. 
-When you click OK, you will call the receiveklay function to transfer the KLAY. 
-I have not implemented it yet. 
-Let's implement the function. 
-It's our last function.
- 
-When the user answers the correct answer, they pay the transaction fee through their account and get the KLAY. 
-We will convert 0.1 KLAY in our contract transfer function to peb and pass it as an argument. 
-First, let's show you how to load using a spinner during transaction processing.
+Да, функция submitanswer реализовала.
+Давайте проверим это один раз.
+Это сообщение отображается, если ответ неправильный.
+Когда это будет сделано, появится окно подтверждения сообщения для получения KLAY.
+Когда вы нажмете OK, вы вызовете функцию receiveklay для передачи KLAY.
+Я еще не реализовал это.
+Давайте реализуем функцию.
+Это наша последняя функция.
+ 
+Когда пользователь дает правильный ответ, он оплачивает транзакцию через свой аккаунт и получает KLAY.
+Мы преобразуем 0,1 KLAY в нашей передаточной функции контракта в peb и передадим это в качестве аргумента.
+Во-первых, давайте покажем вам, как загружать процесс, используя спиннер во время обработки транзакций.
 var spinner = this.showSpinner();
 
-In addition, we need the verified account address required for the transaction, so, load the Wallet instance.
+Кроме того, нам нужен проверенный адрес учетной записи, необходимый для транзакции, поэтому загрузите экземпляр кошелька.
 const walletInstance = this.getWallet();
  
 
-If the value of the wallet instance does not exist, exit the function.
+Если значение экземпляра кошелька не существует, выйдите из функции.
 if (!walletInstance) return;  
  
 
-If so, use the contract instance to access the transfer function in the contract .
+Если существует, используйте экземпляр контракта для доступа к передаточной функции в контракте.
 agContract.methods.transfer().send({
 })
  
-The transfer function of the contract receives one argument. 
-You need use the caver utility to convert the KLAY to peb and pass it. 
+Передаточная функция контракта получает один аргумент.
+Вам нужно использовать утилиту caver, чтобы преобразовать KLAY в peb и передать его.
  
 cav.utils.toPeb(“0.1”, "KLAY")
  
-And you said you need to send a transaction object in the send parameter. 
-You need to specify who calls this function and how much the gas limit is set.
+И вы сказали, что вам нужно отправить объект транзакции в параметре отправки.
+Вам необходимо указать, кто вызывает эту функцию и сколько составит ограничение по газу.
  
 from: walletInstance.address,
 gas: '250000'
  
-Pass the Wallet instance, your account-verified address, and let the gas consume within 250,000. 
-Note that the value field is not required. 
-I will not pass the value because the transfer function is not a payable type. 
-If you do this, you have finished all the values which will be passed. 
-Now, after the transaction is processed, you should check whether it succeeded or not. 
-I could check whether it(deposit) succeeded or not through this .once. 
-However, there’s another way. 
-I can get a receipt by using promise.
+Передайте экземпляр кошелька, адрес, подтвержденный вашим аккаунтом, и потребление газа в пределах 250 000.
+Обратите внимание, что поле value не является обязательным.
+Я не буду передавать value, потому что передаточная функция не является payable типом.
+Если вы сделаете это, вы подтвердити все суммы, которые будут переданы.
+Теперь, после обработки транзакции, вы должны проверить, была ли она успешной или нет.
+Я мог проверить, удалось ли это (депозит) или нет через это - .once.
+Однако есть и другой способ.
+Я могу получить подтверждение, используя promise.
  
 .then(function (receipt) {
 });     
 
-Wait asynchronously and receive the receipt value.
+Подождите и получите значение подтврждения.
 if (receipt.status) { }
 
-There is a field called status in the Receipt object. 
-If this is true, it is successful. 
-So, if you succeed, Stop spinner.
+В объекте подтверждения есть поле с именем status.
+Если оно true, транзакция передана успешно.
+Так что, если вам удалась транзакция, остановите spinner.
 spinner.stop(); 
- 
 
-Also, show notification messages
+ 
+Также покажите уведомления
 alert("0.1 KLAY가 " + walletInstance.address + " 계정으로 지급되었습니다.");      
  
 
-Also, let's create a link in html so that the processed transaction can be checked directly from the scope. 
-I'm going to create a new div. 
-I will make it under the timer div.
+Кроме того, давайте создадим ссылку в html, чтобы обработанная транзакция могла быть проверена непосредственно из интерфейса.
+Я собираюсь создать новый div.
+Я сделаю это под таймером div.
 <div class="row text-center">
    <div id="transaction"></div>
 </div>  
@@ -1175,45 +1175,45 @@ I will make it under the timer div.
 <br />
  
 
-You'll see the link in this section. 
-Go back to the function and clear the transaction div first.
+Вы увидите ссылку в этом разделе.
+Вернитесь к функции и сначала очистите div транзакции.
     $('#transaction').html("");
  
 
-I’m clearing the transaction div to show a new link each time a transaction is created. 
-Next, I'll add a link.
+Я очищаю транзакцию div, чтобы показывать новую ссылку каждый раз, когда транзакция создается.
+Далее я добавлю ссылку.
     $('#transaction')
       .append(`<p><a href='https://baobab.klaytnscope.com/tx/${receipt.txHash}' 
                    target='_blank'>클레이튼 Scope에서 트랜젝션 확인</a></p>`);
  
  
-In the receipt returned by the promise, 
-pass the transactionhash field to the url parameter of the KlaytnScope site so that you can see the transaction information just processed. 
-Lastly, show you the last updated contract balance in html.
+В подтверждаении, возвращаемом promise,
+найдите поле транзакции в параметре url сайта KlaytnScope, чтобы увидеть только что обработанную информацию о транзакции.
+Наконец, покажите последний обновленный баланс контракта в html.
  
 return agContract.methods.getBalance().call()
   .then(function (balance) {
 });        
  
-Call the getBalance function of the contract to recall the remaining balance in the contract.
+Вызовите функцию getBalance контракта, чтобы показать остаток в контракте.
  
  $('#contractBalance').html("");          
  
 
-Clears the existing show balance display and shows the updated balance immediately.
+Очищает существующее отображение показанного баланса и немедленно показывает обновленный баланс.
 $('#contractBalance').append('<p>' + '이벤트 잔액: ' + cav.utils.fromPeb(balance, "KLAY") + ' KLAY' + '</p>');           
  
-The whole process is complete so far. 
-Now, let's try testing. 
-This time, I try to log in with a different account, not the owner account. 
-You can continue with the owner account. 
-If you have created another account, you can try it out as well.
- 
-If you solve the problem and press the OK button, the receiveKlay function is called. 
-The notification message is displayed and the transaction has been successfully completed. 
-You can close the notification message and see that your event balance is reduced. 
-The balance in the contract has been reduced as it moves to your account. 
-And the link was created at the bottom. 
-If you click the link, you can see the information about the track we just created on the scope. 
-Click on your account address and you'll see that the balance is growing. 
-So far, I have tried to solve the problem and transfer the KLAY in the contract to my account.
+Пока весь процесс завершен.
+Теперь давайте попробуем протестировать.
+На этот раз я пытаюсь войти в систему  другой учетной записью, а не учетной записью владельца.
+Вы можете продолжить с учетной записи владельца.
+Если вы создали другую учетную запись, вы также можете попробовать ее.
+ 
+Если вы решили задачу и нажали кнопку OK, вызывается функция receiveKlay.
+Отображается уведомление, и транзакция была успешно завершена.
+Вы можете закрыть уведомление и увидеть, что ваш баланс уменьшен.
+Баланс в договоре был уменьшен, поскольку он перемещается на ваш счет.
+И внизу была создана ссылка.
+Если вы нажмете на ссылку, вы увидите информацию о пути, который мы только что создали в интрфейсе.
+Нажмите на адрес своей учетной записи, и вы увидите, что баланс вырос.
+Итак, мы решили задачу и перенесли KLAY в контракте на свой счет.
